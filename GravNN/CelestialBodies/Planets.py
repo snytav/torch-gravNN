@@ -115,13 +115,20 @@ class Earth(Planet):
         #     processor=format_EGM96_sh,
         # )
 
-        self.EGM2008 = pooch.retrieve(
-            url="https://earth-info.nga.mil/php/download.php?file=egm-08spherical",
-            known_hash="65a9072f337f156e8cbd76ffd773f536e6fb0de18697ea6726ecdb790fac0fbd",
-            fname="EGM2008_raw.zip",
-            path=os.path.dirname(GravNN.__file__) + "/Files/GravityModels/Earth/",
-            processor=format_EGM2008_sh,
-        )
+        fname = "EGM2008_raw.zip"
+        src = "C:\\work\\gravity\\"
+        src += fname
+        dst = os.path.dirname(GravNN.__file__) + "\\Files\\GravityModels\\Earth\\"
+        dst += fname
+        shutil.copy(src, dst)
+        self.EGM2008 = dst
+        # pooch.retrieve(
+        #     url="https://earth-info.nga.mil/php/download.php?file=egm-08spherical",
+        #     known_hash="65a9072f337f156e8cbd76ffd773f536e6fb0de18697ea6726ecdb790fac0fbd",
+        #     fname="EGM2008_raw.zip",
+        #     path=os.path.dirname(GravNN.__file__) + "/Files/GravityModels/Earth/",
+        #     processor=format_EGM2008_sh,
+        # )
 
         self.obj_file = (
             os.path.dirname(GravNN.__file__) + "/Files/ShapeModels/Earth/Earth.obj"
