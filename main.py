@@ -8,14 +8,24 @@ from GravNN.Networks.utils import configure_run_args
 os.environ["OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
 
 
+def run(config):
+    # Tensorflow dependent functions must be defined inside of
+    # run function for thread-safe behavior.
+    from GravNN.Networks.Data import DataSet
+    from GravNN.Networks.Model import PINNGravityModel
+    from GravNN.Networks.Saver import ModelSaver
+    from GravNN.Networks.utils import configure_tensorflow, populate_config_objects
+
 def main():
-    dataframe where the network configuration info will be saved
-   df_file = "Data/Dataframes/example_training.data"
+    #dataframe where the network configuration info will be saved
+    df_file = "Data/Dataframes/example_training.data"
 
-    a default set of hyperparameters / configuration details for PINN
-   config = get_default_eros_config()
+    #a default set of hyperparameters / configuration details for PINN
+    from GravNN.Networks.Configs.Eros_Configs import get_default_eros_config
+    config = get_default_eros_config()
 
-    hyperparameters which overwrite defaults
+    #hyperparameters which overwrite defaults
+    from GravNN.CelestialBodies.Asteroids import Eros
     hparams = PINN_III()
     hparams.update(ReduceLrOnPlateauConfig())
     hparams.update(
@@ -40,14 +50,9 @@ def main():
     save_training(df_file, configs)
 
 
-def run(config):
-    # Tensorflow dependent functions must be defined inside of
-    # run function for thread-safe behavior.
-    from GravNN.Networks.Data import DataSet
-    from GravNN.Networks.Model import PINNGravityModel
-    from GravNN.Networks.Saver import ModelSaver
-    from GravNN.Networks.utils import configure_tensorflow, populate_config_objects
 
+
+    from GravNN.Networks.utils import configure_tensorflow,populate_config_objects
     configure_tensorflow(config)
 
     # Standardize Configuration
@@ -55,9 +60,13 @@ def run(config):
     print(config)
 
     # Get data, network, optimizer, and generate model
+    from GravNN.Networks.Data import DataSet
+
     data = DataSet(config)
+    from GravNN.Networks.Compression import PINNGravityModel
     model = PINNGravityModel(config)
     history = model.train(data)
+    from GravNN.Networks.Saver import ModelSaver
     saver = ModelSaver(model, history)
     saver.save(df_file=None)
 
