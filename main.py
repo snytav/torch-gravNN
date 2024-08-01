@@ -9,35 +9,35 @@ os.environ["OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
 
 
 def main():
-    # dataframe where the network configuration info will be saved
-   # df_file = "Data/Dataframes/example_training.data"
+    dataframe where the network configuration info will be saved
+   df_file = "Data/Dataframes/example_training.data"
 
-    # a default set of hyperparameters / configuration details for PINN
-   # config = get_default_eros_config()
+    a default set of hyperparameters / configuration details for PINN
+   config = get_default_eros_config()
 
-    # hyperparameters which overwrite defaults
+    hyperparameters which overwrite defaults
     hparams = PINN_III()
     hparams.update(ReduceLrOnPlateauConfig())
-    # hparams.update(
-    #     {
-    #         "obj_file": [Eros().obj_8k],
-    #         "N_dist": [5000],
-    #         "N_train": [4500],
-    #         "N_val": [500],
-    #         "batch_size": [4096],
-    #         "PINN_constraint_fcn": ["pinn_a"],
-    #         # 'trainable_tanh' : [True],
-    #         # 'tanh_k' : [1.0],
-    #         # 'tanh_r' : [1.0],
-    #     },
-    # )
+    hparams.update(
+        {
+            "obj_file": [Eros().obj_8k],
+            "N_dist": [5000],
+            "N_train": [4500],
+            "N_val": [500],
+            "batch_size": [4096],
+            "PINN_constraint_fcn": ["pinn_a"],
+            # 'trainable_tanh' : [True],
+            # 'tanh_k' : [1.0],
+            # 'tanh_r' : [1.0],
+        },
+    )
 
     threads = 1
-    # args = configure_run_args(config, hparams)
-    # with mp.Pool(threads) as pool:
-    #     results = pool.starmap_async(run, args)
-    #     configs = results.get()
-    # save_training(df_file, configs)
+    args = configure_run_args(config, hparams)
+    with mp.Pool(threads) as pool:
+        results = pool.starmap_async(run, args)
+        configs = results.get()
+    save_training(df_file, configs)
 
 
 def run(config):

@@ -186,6 +186,7 @@ class SphericalHarmonics(GravityModelBase):
         return
 
     def loadSH_csv(self):
+        self.file = 'C:\\NN\\gravNN_selected\\GravNN\\Files\\GravityModels\\Earth\\EGM2008.txt'
         need_whitespace_fix = False
         with open(self.file, "r") as csvfile:
             gravReader = csv.reader(csvfile, delimiter=",")

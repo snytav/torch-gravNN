@@ -114,6 +114,7 @@ class Earth(Planet):
         #     path=os.path.dirname(GravNN.__file__) + "/Files/GravityModels/Earth/",
         #     processor=format_EGM96_sh,
         # )
+        format_EGM96_sh(dst, "update", pooch)
 
         fname = "EGM2008_raw.zip"
         src = "C:\\work\\gravity\\"
@@ -129,6 +130,8 @@ class Earth(Planet):
         #     path=os.path.dirname(GravNN.__file__) + "/Files/GravityModels/Earth/",
         #     processor=format_EGM2008_sh,
         # )
+        self.file = format_EGM2008_sh(dst, "update", pooch)
+        # = dst
 
         self.obj_file = (
             os.path.dirname(GravNN.__file__) + "/Files/ShapeModels/Earth/Earth.obj"
