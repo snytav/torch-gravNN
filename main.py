@@ -15,6 +15,26 @@ def run(config):
     from GravNN.Networks.Model import PINNGravityModel
     from GravNN.Networks.Saver import ModelSaver
     from GravNN.Networks.utils import configure_tensorflow, populate_config_objects
+    configure_tensorflow(config)
+
+    # Standardize Configuration
+    config = populate_config_objects(config)
+    print(config)
+
+    # Get data, network, optimizer, and generate model
+    from GravNN.Networks.Data import DataSet
+
+    data = DataSet(config)
+    from GravNN.Networks.Compression import PINNGravityModel
+    model = PINNGravityModel(config)
+    history = model.train(data)
+    from GravNN.Networks.Saver import ModelSaver
+    saver = ModelSaver(model, history)
+    saver.save(df_file=None)
+
+    # Appends the model config to a perscribed df
+    return model.config
+
 
 def main():
     #dataframe where the network configuration info will be saved
@@ -44,34 +64,18 @@ def main():
 
     threads = 1
     args = configure_run_args(config, hparams)
-    with mp.Pool(threads) as pool:
-        results = pool.starmap_async(run, args)
-        configs = results.get()
+    results = run(config)
+    # with mp.Pool(threads) as pool:
+    #     results = pool.starmap_async(run, args)
+    #     configs = results.get()
     save_training(df_file, configs)
+
+    qq =  0
 
 
 
 
     from GravNN.Networks.utils import configure_tensorflow,populate_config_objects
-    configure_tensorflow(config)
-
-    # Standardize Configuration
-    config = populate_config_objects(config)
-    print(config)
-
-    # Get data, network, optimizer, and generate model
-    from GravNN.Networks.Data import DataSet
-
-    data = DataSet(config)
-    from GravNN.Networks.Compression import PINNGravityModel
-    model = PINNGravityModel(config)
-    history = model.train(data)
-    from GravNN.Networks.Saver import ModelSaver
-    saver = ModelSaver(model, history)
-    saver.save(df_file=None)
-
-    # Appends the model config to a perscribed df
-    return model.config
 
 
 if __name__ == "__main__":
